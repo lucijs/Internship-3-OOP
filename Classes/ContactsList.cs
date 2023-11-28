@@ -1,9 +1,4 @@
 ﻿using Internship_3_OOP.Phone;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Internship_3_OOP.Classes
 {
@@ -11,33 +6,64 @@ namespace Internship_3_OOP.Classes
     {
         public static List<Contact> AllContacts { get; } = new();
 
-        public static bool Add(Contact contactWeWantToAdd)
+        public static void Add()
         {
+            var (name, surname) = GettingTheNameAndSurname();
+            Console.Write("Phone Number: ");
+            var phoneNumber = Console.ReadLine();
+            Console.WriteLine("Odaberi je li kontakt favorit, regularan ili blokiran. (napisati riječima naš odabir)");
+            var preference = Console.ReadLine();
+
+            var newContact = new Contact(name, surname, phoneNumber, preference);
+
             foreach (var contact in AllContacts)
             {
-                if (contact.PhoneNumber == contactWeWantToAdd.PhoneNumber)
+                if (contact.PhoneNumber == newContact.PhoneNumber)
                 {
-                    return false;
+                    Console.WriteLine("Već postoji kontakt s tim brojem.");
+                    Console.ReadKey();
+
                 }
 
             }
-            AllContacts.Add(contactWeWantToAdd);
-            return true;
+            AllContacts.Add(newContact);
+            Console.WriteLine("Kontakt je uspješno dodan.");
+            Console.ReadKey();
         }
 
-
-        public static bool Remove(string firstName, string lastName)
+        public static void ListAllContacts()
         {
+            foreach (var contact in AllContacts)
+                Console.WriteLine($"{contact.FirstName} {contact.LastName}\n\t{contact.PhoneNumber}\n\t{contact.ContactPreferences}");
+            Console.ReadKey();
+        }
+
+        public static void Remove()
+        {
+            var (firstName, lastName) = GettingTheNameAndSurname();
+
             foreach (var contact in AllContacts)
             {
                 if (contact.FirstName == firstName && contact.LastName == lastName)
                 {
                     AllContacts.Remove(contact);
-                    return true;
+                    Console.WriteLine($"Uspješno izbrisan kontakt {firstName} {lastName}");
+                    Console.ReadKey();
+                    return;
                 }
 
             }
-            return false;
+            Console.WriteLine("Ne postoji kontakt s tim imenom i prezimenom.");
+            Console.ReadKey();
+        }
+
+        public static (string firstName, string lastName) GettingTheNameAndSurname()
+        {
+            Console.Write("Name: ");
+            var name = Console.ReadLine();
+            Console.Write("Surname: ");
+            var surname = Console.ReadLine();
+            return (name, surname);
         }
     }
 }
