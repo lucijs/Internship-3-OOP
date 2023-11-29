@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Internship-3-OOP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f508d2251daa08ca1da8aeb10dc72c47dca3197c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+61b0192d214f9918232749ce03ab928fbdbdbc0d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Internship-3-OOP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Internship-3-OOP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

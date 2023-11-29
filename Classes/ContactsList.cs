@@ -1,4 +1,5 @@
 ﻿using Internship_3_OOP.Phone;
+using System.Text;
 
 namespace Internship_3_OOP.Classes
 {
@@ -8,11 +9,11 @@ namespace Internship_3_OOP.Classes
 
         public static void Add()
         {
+            Console.Clear();
+            Console.WriteLine("Dodavanje novog kontakta");
             var (name, surname) = GettingTheNameAndSurname();
-            Console.Write("Phone Number: ");
-            var phoneNumber = Console.ReadLine();
-            Console.WriteLine("Odaberi je li kontakt favorit, regularan ili blokiran. (napisati riječima naš odabir)");
-            var preference = Console.ReadLine();
+            var phoneNumber = GettingTheNumber();
+            var preference = GettingThePreference("Odaberi je li kontakt favorit, regularan ili blokiran. (napisati riječima naš odabir)");
 
             var newContact = new Contact(name, surname, phoneNumber, preference);
 
@@ -33,6 +34,7 @@ namespace Internship_3_OOP.Classes
 
         public static void ListAllContacts()
         {
+            Console.Clear();
             foreach (var contact in AllContacts)
                 Console.WriteLine($"{contact.FirstName} {contact.LastName}\n\t{contact.PhoneNumber}\n\t{contact.ContactPreferences}");
             Console.ReadKey();
@@ -41,20 +43,27 @@ namespace Internship_3_OOP.Classes
         public static void Remove()
         {
             var (firstName, lastName) = GettingTheNameAndSurname();
+            var contact = DoesThisContatctExists(firstName, lastName);
+            if (contact == null)
+            {
+                Console.WriteLine("Ne postoji kontakt s tim imenom i prezimenom.");
+                Console.ReadKey();
+            }
 
+            AllContacts.Remove(contact);
+            Console.WriteLine($"Uspješno izbrisan kontakt {firstName} {lastName}");
+            Console.ReadKey();
+        }
+
+        public static Contact DoesThisContatctExists(string firstName, string lastName)
+        {
             foreach (var contact in AllContacts)
             {
                 if (contact.FirstName == firstName && contact.LastName == lastName)
-                {
-                    AllContacts.Remove(contact);
-                    Console.WriteLine($"Uspješno izbrisan kontakt {firstName} {lastName}");
-                    Console.ReadKey();
-                    return;
-                }
+                    return contact;
 
             }
-            Console.WriteLine("Ne postoji kontakt s tim imenom i prezimenom.");
-            Console.ReadKey();
+            return null;
         }
 
         public static (string firstName, string lastName) GettingTheNameAndSurname()
@@ -64,6 +73,37 @@ namespace Internship_3_OOP.Classes
             Console.Write("Surname: ");
             var surname = Console.ReadLine();
             return (name, surname);
+        }
+
+        public static string GettingTheNumber()
+        {
+            Console.Write("Unesite broj, može se sastojati samo od znamenki: ");
+            var phoneNumber = Console.ReadLine();
+            foreach(var num in phoneNumber)
+                if(!int.TryParse(num.ToString(),out var someNumber))
+                {
+                    Console.WriteLine("Pogriješili ste pri upisu, pokušajte ponovno.");
+                    GettingTheNumber();
+                }
+            if (phoneNumber.Length < 9)
+            {
+                Console.WriteLine("Pogriješili ste pri upisu, pokušajte ponovno.");
+                GettingTheNumber();
+            }
+
+            return phoneNumber;
+        }
+
+        public static string GettingThePreference(string output)
+        {
+            Console.WriteLine(output);
+            var preference = Console.ReadLine();
+            if (!"favorit~regularan~blokiran".Contains(preference))
+            {
+                Console.WriteLine( "Vaš odabir ne postoji, pokušajte ponovno");
+                GettingThePreference(output);
+            }
+            return preference;
         }
     }
 }
