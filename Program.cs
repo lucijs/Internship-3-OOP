@@ -1,9 +1,7 @@
 ﻿using Internship_3_OOP.Classes;
+using Internship_3_OOP.Enum;
 using Internship_3_OOP.Phone;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Channels;
 
-var History = new Dictionary<Contact, List<PhoneCall>>();
 var MainMenu = new Dictionary<int, (Action actionWeWantToDo, string actionDescription)>()
 {
     {1, (ContactsList.ListAllContacts , "Ispis svih kontakata") },
@@ -11,7 +9,7 @@ var MainMenu = new Dictionary<int, (Action actionWeWantToDo, string actionDescri
     {3, (ContactsList.Remove,"Brisanje kontakta iz imenika")},
     {4, (ChangePreferences,"Editiranje preference kontakta")},
     {5, (OpenSubMeni,"Upravljanje kontaktom")},
-    {6, (ContactsList.Remove,"Ispis svih poziva")},
+    {6, (CallHistory.ListAllPhoneCalls,"Ispis svih poziva")},
     {7, (() => Console.ReadKey(), "Izlaz iz aplikacije") }
     
 };
@@ -22,11 +20,37 @@ static void OpenSubMeni()
 {
     var SubMenu = new Dictionary<int, (Action actionWeWantToDo, string actionDescription)>()
     {
+        {1, (ListAllThePhoneCallsWithOneContact, "ispis svih poziva s odabranim kontaktom") },
+        {2, (AddPhoneCall, "kreiranje novog poziva") },
         {3, (()=> Console.ReadKey(), "izlaz iz podmenua") }
     };
     RunTheProgram(SubMenu, 3);
 }
 
+static void AddPhoneCall()
+{
+    Console.Clear();
+    var contact = GettingTheContact();
+    if (contact.ContactPreferences == Preferences.Blocked)
+    {
+        Console.WriteLine("Ovaj kontakt vam je blokiran i s njim trenutno ne možete uspostaviti poziv.");
+        return;
+    }
+    List<Status> statuses = new List<Status>{ Status.Missed, Status.Finished, Status.Ongoing };
+    var randomNumberGenerator = new Random();
+    var randomNumber = randomNumberGenerator.Next(1,20);
+    var phoneCall = new PhoneCall(contact, DateTime.Now, statuses[randomNumber % 3]);
+
+    foreach (var call in CallHistory.AllPhoneCalls)
+    {
+        if (call.WhatWasTheTimeOfTheCall().AddSeconds(-randomNumber).CompareTo(phoneCall.WhatWasTheTimeOfTheCall()) >= 0)
+        {
+            Console.WriteLine("Ne možemo imati više poziva istovremeno");
+            return;
+        }
+    }
+    CallHistory.Add(phoneCall);
+}
 static void RunTheProgram(Dictionary<int, (Action actionWeWantToDo, string actionDescription)> menu, int number)
 {
     bool doWeWantToContinue;
@@ -62,16 +86,38 @@ static int UserInput()
 
 static void ChangePreferences()
 {
-    var (name, surname) = ContactsList.GettingTheNameAndSurname();
-    Contact contact = ContactsList.DoesThisContatctExists(name, surname);
+    Console.Clear();
+    var contact = GettingTheContact();
     var preference = ContactsList.GettingThePreference($"Preferenca je trenutno postavljena na {contact.ContactPreferences}. Na što je želite postaviti? (napisati riječima naš odabir)");
     contact.SettingTheChosenPreference(preference);
 }
 
 static void ListAllThePhoneCallsWithOneContact()
-{ 
-    
+{
+    Console.Clear ();
+    var contact = GettingTheContact();
+    var listOfPhoneCalls = CallHistory.PhoneCallHistory[contact];
+    var listOfDates = new List<DateTime>();
+    foreach (var obj in listOfPhoneCalls)
+        listOfDates.Add(obj.WhatWasTheTimeOfTheCall());
+    listOfDates.Order();
+
+    foreach (var date in listOfDates)
+        foreach (var phoneCall in listOfPhoneCalls)
+            if (date == phoneCall.WhatWasTheTimeOfTheCall())
+                phoneCall.PrintThePhoneCall();
+    Console.ReadKey();
 }
 
+static Contact GettingTheContact()
+{
+    Contact contact;
+    do
+    {
+        var (name, surname) = ContactsList.GettingTheNameAndSurname();
+        contact = ContactsList.DoesThisContatctExists(name, surname);
+    } while (contact == null);
+    return contact;
+}
 
 

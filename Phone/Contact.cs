@@ -17,6 +17,14 @@ namespace Internship_3_OOP.Phone
             SettingTheChosenPreference(preference);
         }
 
+        public Contact(string firstName, string lastName, string phoneNumber, Preferences preference)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            PhoneNumber = phoneNumber;
+            ContactPreferences = preference;
+        }
+
         public void SettingTheChosenPreference(string preference)
         {
             ContactPreferences = preference == "favorit" ? Preferences.Favourite : (preference == "blokiran" ? Preferences.Blocked : Preferences.Regular);

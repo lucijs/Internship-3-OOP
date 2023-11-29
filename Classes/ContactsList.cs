@@ -1,5 +1,4 @@
 ﻿using Internship_3_OOP.Phone;
-using System.Text;
 
 namespace Internship_3_OOP.Classes
 {
@@ -23,11 +22,12 @@ namespace Internship_3_OOP.Classes
                 {
                     Console.WriteLine("Već postoji kontakt s tim brojem.");
                     Console.ReadKey();
-
+                    return;
                 }
 
             }
             AllContacts.Add(newContact);
+            CallHistory.PhoneCallHistory.Add(newContact, new List<PhoneCall>());
             Console.WriteLine("Kontakt je uspješno dodan.");
             Console.ReadKey();
         }
@@ -42,6 +42,7 @@ namespace Internship_3_OOP.Classes
 
         public static void Remove()
         {
+            Console.Clear() ;
             var (firstName, lastName) = GettingTheNameAndSurname();
             var contact = DoesThisContatctExists(firstName, lastName);
             if (contact == null)
@@ -58,11 +59,9 @@ namespace Internship_3_OOP.Classes
         public static Contact DoesThisContatctExists(string firstName, string lastName)
         {
             foreach (var contact in AllContacts)
-            {
                 if (contact.FirstName == firstName && contact.LastName == lastName)
                     return contact;
 
-            }
             return null;
         }
 
