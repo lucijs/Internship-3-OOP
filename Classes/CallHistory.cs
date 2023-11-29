@@ -11,7 +11,6 @@ namespace Internship_3_OOP.Classes
             AllPhoneCalls.Add(phoneCall);
             foreach (var call in ContactsList.AllContacts)
             {
-                Console.WriteLine("provjera");
                 if (phoneCall.PhoneNumber == call.PhoneNumber)//nemaju dva kontakta s istim brojem
                 {
                     PhoneCallHistory[call].Add(phoneCall);

@@ -39,11 +39,13 @@ static void AddPhoneCall()
     List<Status> statuses = new List<Status>{ Status.Missed, Status.Finished, Status.Ongoing };
     var randomNumberGenerator = new Random();
     var randomNumber = randomNumberGenerator.Next(1,20);
-    var phoneCall = new PhoneCall(contact, DateTime.Now, statuses[randomNumber % 3]);
+    var phoneCall = new PhoneCall(contact, DateTime.Now, statuses[randomNumber % 3], DateTime.Now.AddSeconds(randomNumber));
 
     foreach (var call in CallHistory.AllPhoneCalls)
     {
-        if (call.WhatWasTheTimeOfTheCall().AddSeconds(-randomNumber).CompareTo(phoneCall.WhatWasTheTimeOfTheCall()) >= 0)
+        if(DateTime.Now.CompareTo(call.WhenDidPhoneCallEnded())<0)
+            call.FinishThePhonCall();
+        if (call.WhatWasTheTimeOfTheCall().AddSeconds(-randomNumber).CompareTo(phoneCall.WhatWasTheTimeOfTheCall()) >= 0||call.ReturnTheStatus()==Status.Ongoing)
         {
             Console.WriteLine("Ne možemo imati više poziva istovremeno");
             return;

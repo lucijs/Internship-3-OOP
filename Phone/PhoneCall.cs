@@ -9,16 +9,12 @@ namespace Internship_3_OOP.Phone
         private DateTime TimeOfCall { get; set; }
         private Status PhoneStatus { get; set; }
 
-        public PhoneCall(string firstName, string lastName, string phoneNumber, string preference, DateTime date, Status status) :base(firstName,lastName,phoneNumber,preference)
+        private DateTime Duration { get; set; }
+        public PhoneCall(Contact contact, DateTime date, Status status, DateTime duration) : base(contact.FirstName,contact.LastName,contact.PhoneNumber, contact.ContactPreferences)
         {
             TimeOfCall = date;
             PhoneStatus = status;
-
-        }
-        public PhoneCall(Contact contact, DateTime date, Status status) : base(contact.FirstName,contact.LastName,contact.PhoneNumber, contact.ContactPreferences)
-        {
-            TimeOfCall = date;
-            PhoneStatus = status;
+            Duration = duration;
         }
         public void PrintThePhoneCall()
         {
@@ -32,6 +28,10 @@ namespace Internship_3_OOP.Phone
         public Status ReturnTheStatus()
         {
             return PhoneStatus;
+        }
+        public DateTime WhenDidPhoneCallEnded()
+        {
+            return Duration;
         }
         public void FinishThePhonCall()
         {
